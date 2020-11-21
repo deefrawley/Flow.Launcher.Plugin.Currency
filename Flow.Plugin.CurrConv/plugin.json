@@ -1,0 +1,12 @@
+{
+    "ID": "18892b78-63ac-43ab-a278-59a5a2866dd8",
+    "ActionKeyword": "cc",
+    "Name": "Currency Converter",
+    "Description": "Currency converter using the euro and rates at https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
+    "Author": "deefrawley",
+    "Version": "1.0",
+    "Language": "python",
+    "Website": "https://github.com/Flow-Launcher/Flow.Launcher",
+    "IcoPath": "Images\\app.png",
+    "ExecuteFileName": "main.py"
+}
