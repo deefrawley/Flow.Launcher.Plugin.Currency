@@ -2,6 +2,8 @@
 
 Currency conversion for the [Flow launcher](https://github.com/Flow-Launcher/Flow.Launcher)
 
+Test change
+
 ### About
 
 Uses the [Eurpoean Central Bank](https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html) daily rates to get and convert currency exchange rates.
