@@ -26,7 +26,7 @@ class Main(FlowLauncher):
             Requests library response classa
         """
 
-        # If user set the proxy, you should handle it.
+        # If user set the proxy, we should handle it.
         if self.proxy and self.proxy.get("enabled") and self.proxy.get("server"):
             proxies = {
                 "http": "http://{}:{}".format(
@@ -157,8 +157,9 @@ class Main(FlowLauncher):
         # Now get fractional digits
         if "." in amount:
             frac = len(amount.split(".")[1].rstrip("0"))
+        # Default to precision of 3 decimal places
         else:
-            frac = 0
+            frac = 3
 
         decimal.getcontext().prec = digits + frac
 
