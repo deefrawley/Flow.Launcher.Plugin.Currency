@@ -2,6 +2,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/python,vscode
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,vscode
 
+# Module specific
+eurofxref-daily.xml
+
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/

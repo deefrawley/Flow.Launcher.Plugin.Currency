@@ -10,11 +10,10 @@ Currency code that can be used are:
 
 'AUD' , 'BGN' , 'BRL' , 'CAD' , 'CHF' , 'CNY' , 'CZK' , 'DKK' , 'GBP', 'HKD' , 'HRK' , 'HUF' , 'IDR' , 'ILS' , 'INR' , 'ISK' , 'JPY' , 'KRW', 'MXN','MYR' , 'NOK' , 'NZD' , 'PHP' , 'PLN' , 'RON' , 'RUB' , 'SEK', 'SGD' , 'THB' , 'TRY' , 'USD' , 'ZAR' , 'EUR'
 
-Currently using a workaround as per [this Flow issue](https://github.com/Flow-Launcher/Flow.Launcher/issues/155)
-
 ### Requirements
 
-Python 3.5 or later installed on your system, with python.exe in your PATH variable (this is a general requirement to use Python plugins with Flow)
+Python 3.5 or later installed on your system, with python.exe in your PATH variable (this is a general requirement to use Python plugins with Flow).
+See requirements.txt for package dependencies.
 
 You must be online when you run the plugin to download the XML or you will get a connection error. If the local XML file is 2 hours or less old (that is, you've run the plugin before in the previous two hours), it will just use the local file.
 
