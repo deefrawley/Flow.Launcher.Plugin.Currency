@@ -7,6 +7,7 @@ import decimal
 from typing import List
 from plugin.templates import RESULT_TEMPLATE, ACTION_TEMPLATE
 from flowlauncher import FlowLauncher
+from plugin.extensions import _
 
 
 class Main(FlowLauncher):
@@ -77,12 +78,12 @@ class Main(FlowLauncher):
             # Check first argument is valid currency code
             if args[1].upper() not in currencies:
                 self.sendNormalMess(
-                    "Error - {} not a valid currency".format(args[1].upper(), "")
+                    _("Error - {} not a valid currency").format(args[1].upper(), "")
                 )
             # Check second argument is valid currency code
             elif len(args[2]) == 3 and args[2].upper() not in currencies:
                 self.sendNormalMess(
-                    "Error - {} not a valid currency".format(args[2].upper(), "")
+                    _("Error - {} not a valid currency").format(args[2].upper(), "")
                 )
             # Do the conversion but only after three char code entered
             elif len(args[2]) == 3:
@@ -111,16 +112,16 @@ class Main(FlowLauncher):
                                 decimal.Decimal(conv[1]) / decimal.Decimal(args[0]),
                                 args[2].upper(),
                             ),
-                            "Rates date : {}".format(conv[0]),
+                            _("Rates date : {}").format(conv[0]),
                         )
                     # Show exceptions (for debugging as much as anything else)
                     except Exception as e:
-                        self.sendNormalMess("Error - {}".format(repr(e)), "")
+                        self.sendNormalMess(_("Error - {}").format(repr(e)), "")
         # Always show the usage while there isn't a valid query
         else:
             self.sendNormalMess(
-                "Currency Converter",
-                "<Hotkey> <Amount> <Source currency> <Destination currency>",
+                _("Currency Converter"),
+                _("<Hotkey> <Amount> <Source currency> <Destination currency>"),
             )
 
         return self.messages_queue
