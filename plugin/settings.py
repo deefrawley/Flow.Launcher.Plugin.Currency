@@ -1,26 +1,20 @@
 # -*- coding: utf-8 -*-
 
-
 import os
-from pathlib import Path
-
 from dotenv import load_dotenv
 
-setting_pyfile = Path(__file__).resolve()
-pludir = setting_pyfile.parent
-basedir = pludir.parent
+basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 
-dotenv_path = basedir / ".env"
-if dotenv_path.exists():
+dotenv_path = os.path.join(basedir, ".env")
+if os.path.exists(dotenv_path):
     load_dotenv(dotenv_path)
 
 
-ICON_PATH = "assets/favicon.ico"
-
 # The default value can work, if no user config.
-CONFIG = os.getenv("CONFIG", "default config")
 LOCAL = os.getenv("local", "en")
 
+
+ICON_PATH = "assets/favicon.ico"
 
 # the information of package
 __package_name__ = "Flow.plugin.currency"
