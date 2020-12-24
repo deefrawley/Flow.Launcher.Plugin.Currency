@@ -130,8 +130,8 @@ def currconv(rates, sourcecurr, destcurr, amount):
         frac = 3
 
     decimal.getcontext().prec = digits + frac
-
-    destrate = 0.0
+    sourcerate = 1.0
+    destrate = 1.0
     if destcurr.upper() == "EUR":
         for rate in rates:
             if rate == "date":

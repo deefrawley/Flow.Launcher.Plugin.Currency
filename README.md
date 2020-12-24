@@ -1,4 +1,4 @@
-# Flow.Plugin.Currency
+# Flow.Laucnher.Plugin.Currency
 
 Currency conversion for the [Flow launcher](https://github.com/Flow-Launcher/Flow.Launcher)
 
@@ -22,6 +22,10 @@ You must be online when you run the plugin to download the XML or you will get a
 ### Installing
 
 Add the Flow.Plugin.Currency directory to %APPDATA%\FlowLauncher\Plugins\ and restart Flow.
+
+### Localisation
+
+Currently English and Chinese language supported. Edit the .env file to change the language.
 
 ### Usage
 

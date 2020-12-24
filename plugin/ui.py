@@ -38,7 +38,6 @@ class Main(FlowLauncher):
         q = param.strip()
         args = q.split(" ")
 
-        # Do your job at here.
         currencies = [
             "AUD",
             "BGN",
@@ -75,18 +74,25 @@ class Main(FlowLauncher):
             "EUR",
         ]
         if len(args) == 3:
-            # Check first argument is valid currency code
-            if args[1].upper() not in currencies:
+            # Check codes are three letters
+            if len(args[1]) != 3 or len(args[2]) != 3:
                 self.sendNormalMess(
-                    _("Error - {} not a valid currency").format(args[1].upper(), "")
+                    _("Please enter three character currency codes"), ""
+                )
+
+            # Check first argument is valid currency code
+            elif len(args[1]) == 3 and args[1].upper() not in currencies:
+                self.sendNormalMess(
+                    _("Error - {} not a valid currency").format(args[1].upper()), ""
                 )
             # Check second argument is valid currency code
             elif len(args[2]) == 3 and args[2].upper() not in currencies:
                 self.sendNormalMess(
-                    _("Error - {} not a valid currency").format(args[2].upper(), "")
+                    _("Error - {} not a valid currency").format(args[2].upper()), ""
                 )
-            # Do the conversion but only after three char code entered
-            elif len(args[2]) == 3:
+            # Do the conversion
+            # elif len(args[2]) == 3:
+            else:
                 # If source and dest currencies the same just return entered amount
                 if args[1].upper() == args[2].upper():
                     self.sendNormalMess(

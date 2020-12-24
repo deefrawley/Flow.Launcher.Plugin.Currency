@@ -4,5 +4,5 @@
 from plugin import Main
 
 if __name__ == "__main__":
-    r = Main().query("")
+    r = Main().query("15 USDD AU")
     print(r)

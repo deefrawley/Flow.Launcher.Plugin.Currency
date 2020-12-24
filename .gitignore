@@ -92,6 +92,7 @@ pythonenv*
 .prof
 
 ### vscode ###
+.vscode
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json

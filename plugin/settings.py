@@ -17,8 +17,8 @@ LOCAL = os.getenv("local", "en")
 ICON_PATH = "assets/favicon.ico"
 
 # the information of package
-__package_name__ = "Flow.plugin.currency"
-__version__ = "2.0.0"
+__package_name__ = "Flow.Launcher.Plugin.Currency"
+__version__ = "1.0.0"
 __short_description__ = (
     "Currency converter using the euro and rates at https://www.ecb.europa.eu/"
 )

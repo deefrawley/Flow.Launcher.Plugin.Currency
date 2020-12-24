@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  2.0.0\n"
 "Report-Msgid-Bugs-To: deefrawley@gmail.com\n"
-"POT-Creation-Date: 2020-12-13 21:34+1100\n"
+"POT-Creation-Date: 2020-12-24 19:52+1100\n"
 "PO-Revision-Date: 2020-12-13 20:26+1100\n"
 "Last-Translator: CitizenDee <deefrawley@gmail.com>\n"
 "Language: en\n"
@@ -18,23 +18,27 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.0\n"
 
-#: plugin/ui.py:81 plugin/ui.py:86
+#: plugin/ui.py:80
+msgid "Please enter three character currency codes"
+msgstr "Please enter three character currency codes"
+
+#: plugin/ui.py:86 plugin/ui.py:91
 msgid "Error - {} not a valid currency"
 msgstr "Error - {} not a valid currency"
 
-#: plugin/ui.py:115
+#: plugin/ui.py:121
 msgid "Rates date : {}"
 msgstr "Rates date : {}"
 
-#: plugin/ui.py:119
+#: plugin/ui.py:125
 msgid "Error - {}"
 msgstr "Error - {}"
 
-#: plugin/ui.py:123
+#: plugin/ui.py:129
 msgid "Currency Converter"
 msgstr "Currency Converter"
 
-#: plugin/ui.py:124
+#: plugin/ui.py:130
 msgid "<Hotkey> <Amount> <Source currency> <Destination currency>"
 msgstr "<Hotkey> <Amount> <Source currency> <Destination currency>"
 
