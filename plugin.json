@@ -1,12 +1,12 @@
 {
     "ID": "18892b78-63ac-43ab-a278-59a5a2866dd8",
     "ActionKeyword": "cc",
-    "Name": "Flow.Launcher.Plugin.Currency",
+    "Name": "Currency Converter",
     "Description": "Currency converter using the euro and rates at https://www.ecb.europa.eu/",
     "Author": "deefrawley",
     "Version": "1.0.0",
     "Language": "python",
-    "Website": "https://github.com/deefrawley/Flow.plugin.currency",
+    "Website": "https://github.com/deefrawley/Flow.Launcher.Plugin.Currency",
     "IcoPath": "assets/favicon.ico",
     "ExecuteFileName": "main.py"
 }
