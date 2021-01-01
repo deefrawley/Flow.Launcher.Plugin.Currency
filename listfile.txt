@@ -1,0 +1,9 @@
+.env
+main.py
+plugin.json
+README.MD
+requirements.txt
+assets\
+plugin\*.py
+plugin\translations\en
+plugin\translations\zh
