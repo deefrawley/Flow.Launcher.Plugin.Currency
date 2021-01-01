@@ -91,9 +91,9 @@ class Main(FlowLauncher):
                     _("Error - {} not a valid currency").format(args[2].upper()), ""
                 )
             # Do the conversion
-            # elif len(args[2]) == 3:
             else:
                 # If source and dest currencies the same just return entered amount
+                decimal.getcontext().prec = 4
                 if args[1].upper() == args[2].upper():
                     self.sendNormalMess(
                         "{} {} = {} {}".format(
@@ -108,6 +108,7 @@ class Main(FlowLauncher):
                         conv = plugin.utils.currconv(
                             ratedict, args[1], args[2], args[0]
                         )
+                        decimal.getcontext().prec = conv[2]
                         self.sendNormalMess(
                             "{} {} = {} {} (1 {} = {} {})".format(
                                 args[0],

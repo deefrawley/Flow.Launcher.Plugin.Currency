@@ -107,31 +107,21 @@ def currconv(rates, sourcecurr, destcurr, amount):
     Returns
     -------
     list
-        Date from the currency XML file and the converted amount
+        Date from the currency XML file and the converted amount, and the precision
     """
 
     converted = []
 
     # Change the decimal precision to match the number of digits in the amount
-    # so it will display correctly
-    # First get integer digits
-    places = int(float(amount))
-    if places > 0:
-        digits = int(math.log10(places)) + 1
-    elif places == 0:
-        digits = 1
-    else:
-        digits = int(math.log10(-places)) + 2  # +1 if you don't count the '-'
-    # Now get fractional digits
     if "." in amount:
-        frac = len(amount.split(".")[1].rstrip("0"))
+        dec_prec = len(amount.split(".")[1]) + 1
     # Default to precision of 3 decimal places
     else:
-        frac = 3
+        dec_prec = 4
 
-    decimal.getcontext().prec = digits + frac
-    sourcerate = 1.0
-    destrate = 1.0
+    decimal.getcontext().prec = dec_prec
+    sourcerate = 1
+    destrate = 1
     if destcurr.upper() == "EUR":
         for rate in rates:
             if rate == "date":
@@ -140,6 +130,7 @@ def currconv(rates, sourcecurr, destcurr, amount):
                 converted.append(
                     (1 / decimal.Decimal(rates[rate])) * decimal.Decimal(amount)
                 )
+                converted.append(dec_prec)
                 return converted
     else:
         for rate in rates:
@@ -151,6 +142,7 @@ def currconv(rates, sourcecurr, destcurr, amount):
                     converted.append(
                         decimal.Decimal(rates[rate]) * decimal.Decimal(amount)
                     )
+                    converted.append(dec_prec)
                     return converted
                 else:
                     destrate = rates[rate]
@@ -159,4 +151,5 @@ def currconv(rates, sourcecurr, destcurr, amount):
     # Convert via the EURO
     sourceEuro = (1 / decimal.Decimal(sourcerate)) * decimal.Decimal(amount)
     converted.append(decimal.Decimal(sourceEuro) * decimal.Decimal(destrate))
+    converted.append(dec_prec)
     return converted
