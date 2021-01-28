@@ -9,7 +9,7 @@ if (Test-Path -Path $destinationFile) {
     $existsCheck = Read-Host $destinationFile "already exists. Delete and recreate, Add files, or eXit now (d/a/x)? "
     switch -Regex ( $existsCheck ) {
         [dD] { 
-            Write-Host "Deleting anb recreating" 
+            Write-Host "Deleting and recreating" 
             Remove-Item $destinationFile
         }
         [aA] { Write-Host "Append" }

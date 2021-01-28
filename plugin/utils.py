@@ -114,13 +114,12 @@ def currconv(rates, sourcecurr, destcurr, amount):
 
     # Change the decimal precision to match the number of digits in the amount
     if "." in amount:
-        dec_prec = len(amount.split(".")[1]) + 1
+        dec_prec = len(amount.split(".")[1])
     # Default to precision of 3 decimal places
     else:
-        dec_prec = 4
+        dec_prec = 3
 
-    decimal.getcontext().prec = dec_prec
-    sourcerate = 1
+    # sourcerate = 1
     destrate = 1
     if destcurr.upper() == "EUR":
         for rate in rates:

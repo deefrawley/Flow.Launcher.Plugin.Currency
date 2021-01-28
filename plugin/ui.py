@@ -93,7 +93,6 @@ class Main(FlowLauncher):
             # Do the conversion
             else:
                 # If source and dest currencies the same just return entered amount
-                decimal.getcontext().prec = 4
                 if args[1].upper() == args[2].upper():
                     self.sendNormalMess(
                         "{} {} = {} {}".format(
@@ -103,20 +102,25 @@ class Main(FlowLauncher):
                     )
                 else:
                     try:
+                        # First strip any commas from the amount
+                        args[0] = args[0].replace(",", "")
                         ratesxml_returncode = plugin.utils.getrates_xml()
                         ratedict = plugin.utils.populate_rates("eurofxref-daily.xml")
                         conv = plugin.utils.currconv(
                             ratedict, args[1], args[2], args[0]
                         )
-                        decimal.getcontext().prec = conv[2]
+                        # decimal.getcontext().prec = conv[2]
                         self.sendNormalMess(
                             "{} {} = {} {} (1 {} = {} {})".format(
                                 args[0],
                                 args[1].upper(),
-                                decimal.Decimal(conv[1]),
+                                round(decimal.Decimal(conv[1]), conv[2]),
                                 args[2].upper(),
                                 args[1].upper(),
-                                decimal.Decimal(conv[1]) / decimal.Decimal(args[0]),
+                                round(
+                                    decimal.Decimal(conv[1]) / decimal.Decimal(args[0]),
+                                    conv[2],
+                                ),
                                 args[2].upper(),
                             ),
                             _("Rates date : {}").format(conv[0]),

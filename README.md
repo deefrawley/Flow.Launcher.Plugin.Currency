@@ -1,4 +1,4 @@
-# Flow.Launcher.Plugin.Currency
+# Currency Converter (Flow.Launcher.Plugin.Currency)
 
 Currency conversion for the [Flow Launcher](https://github.com/Flow-Launcher/Flow.Launcher)
 
