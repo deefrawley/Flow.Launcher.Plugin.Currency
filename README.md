@@ -14,7 +14,7 @@ Currency code that can be used are:
 
 ### Requirements
 
-Python 3.5 or later installed on your system, with python.exe in your PATH variable and this path updated in the Flow Launcher settings (this is a general requirement to use Python plugins with Flow). As of v1.7, Flow Launcher should take care of the installation of Python for you if it is not on your system.
+Python 3.5 or later installed on your system, with python.exe in your PATH variable and this path updated in the Flow Launcher settings (this is a general requirement to use Python plugins with Flow). As of v1.8, Flow Launcher should take care of the installation of Python for you if it is not on your system.
 
 You must be online when you run the plugin in Flow to download the currency XML file, or you will get a connection error. If the local XML file is 2 hours or less old (that is, you've run the plugin before in the previous two hours), it will just use the local file.
 
