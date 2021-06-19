@@ -30,11 +30,15 @@ Add the Flow.Launcher.Plugin.Currency directory to %APPDATA%\Roaming\FlowLaunche
 
 #### Python Package Requirements
 
-Regardless of the method used to install, the user must currently manually ensure that the correct Python packages are installed within the same Python environment used by Flow. The `requirements.txt` file in this repo outlines which packages are needed. This can be found online here on Github, as well as in the local plugin directory once installed (%APPDATA%\Roaming\FlowLauncher\Plugins\Currency Converter-X.X.X\ where X.X.X is the currently installed version)
+There is no requirement to install the packages as they will be packed with the release. 
 
-The easiest way to install these packages is to use the following command in a Windows Command Prompt or Powershell Prompt
+If you still want to manually pip install them:
 
-`pip install -r requirements.txt`
+The `requirements.txt` file in this repo outlines which packages are needed. This can be found online here on Github, as well as in the local plugin directory once installed (%APPDATA%\Roaming\FlowLauncher\Plugins\Currency Converter-X.X.X\ where X.X.X is the currently installed version)
+
+The easiest way to manually install these packages is to use the following command in a Windows Command Prompt or Powershell Prompt
+
+`pip install -r requirements.txt -t ./lib`
 
 Remember you need to be in the local directory containing the requirements text file.
 
