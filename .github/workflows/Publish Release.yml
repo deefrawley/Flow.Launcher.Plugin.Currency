@@ -30,6 +30,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r ./requirements.txt -t ./lib
+          pip install -r ./requirements-dev.txt
+          msgfmt ./plugin/translations/en/LC_MESSAGES/messages.po -o plugin/translations/en/LC_MESSAGES/messages.mo
+          msgfmt ./plugin/translations/zh/LC_MESSAGES/messages.po -o plugin/translations/zh/LC_MESSAGES/messages.mo
           zip -r Flow.Launcher.Plugin.Currency.zip . -x '*.git*'
       - name: Publish
         uses: softprops/action-gh-release@v1
