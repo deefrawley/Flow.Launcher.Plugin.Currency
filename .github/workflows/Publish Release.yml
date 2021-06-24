@@ -35,6 +35,7 @@ jobs:
           msgfmt ./plugin/translations/zh/LC_MESSAGES/messages.po -o ./plugin/translations/zh/LC_MESSAGES/messages.mo
           zip -r Flow.Launcher.Plugin.Currency.zip . -x '*.git*'
       - name: Publish
+        if: success() && github.ref == 'refs/heads/master'
         uses: softprops/action-gh-release@v1
         with:
           files: 'Flow.Launcher.Plugin.Currency.zip'
