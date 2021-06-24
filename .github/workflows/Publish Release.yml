@@ -28,10 +28,14 @@ jobs:
       - run: echo ${{steps.version.outputs.prop}} 
       - name: Install dependencies
         run: |
+          sudo apt-get install -y gettext
           python -m pip install --upgrade pip
           pip install -r ./requirements.txt -t ./lib
+          msgfmt ./plugin/translations/en/LC_MESSAGES/messages.po -o ./plugin/translations/en/LC_MESSAGES/messages.mo
+          msgfmt ./plugin/translations/zh/LC_MESSAGES/messages.po -o ./plugin/translations/zh/LC_MESSAGES/messages.mo
           zip -r Flow.Launcher.Plugin.Currency.zip . -x '*.git*'
       - name: Publish
+        if: success() && github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v1
         with:
           files: 'Flow.Launcher.Plugin.Currency.zip'
