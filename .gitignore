@@ -58,10 +58,6 @@ coverage.xml
 .pytest_cache/
 pytestdebug.log
 
-# Translations
-*.mo
-*.pot
-
 # PyBuilder
 target/
 

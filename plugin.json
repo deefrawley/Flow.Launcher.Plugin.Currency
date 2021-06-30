@@ -4,7 +4,7 @@
     "Name": "Currency Converter",
     "Description": "Currency converter using the euro and rates at https://www.ecb.europa.eu/",
     "Author": "deefrawley",
-    "Version": "1.2.1",
+    "Version": "1.2.2",
     "Language": "python",
     "Website": "https://github.com/deefrawley/Flow.Launcher.Plugin.Currency",
     "IcoPath": "assets/favicon.ico",
