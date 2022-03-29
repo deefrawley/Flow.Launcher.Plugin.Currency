@@ -1,8 +1,14 @@
 # -*- coding: utf-8 -*-
 import textwrap
-import plugin.utils
+
+# import plugin.utils
 import decimal
 import locale
+import requests
+import decimal
+import xml.etree.ElementTree as ET
+import os
+import datetime
 
 from plugin.translation import _
 from flox import Flox
@@ -11,7 +17,7 @@ from flox import Flox
 class Currency(Flox):
     locale.setlocale(locale.LC_ALL, "")
     # TODO - save list to settings and update from each XML download and just use this list as a first time default
-    currencies = [
+    CURRENCIES = [
         "AUD",
         "BGN",
         "BRL",
@@ -47,6 +53,11 @@ class Currency(Flox):
         "EUR",
     ]
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.max_age = self.settings.get("max_age")
+        self.logger_level("info")
+
     def query(self, query):
         q = query.strip()
         args = q.split(" ")
@@ -56,12 +67,12 @@ class Currency(Flox):
                 self.add_item(title=_("Please enter three character currency codes"))
 
             # Check first argument is valid currency code
-            elif len(args[1]) == 3 and args[1].upper() not in self.currencies:
+            elif len(args[1]) == 3 and args[1].upper() not in self.CURRENCIES:
                 self.add_item(title=_("Error - {} not a valid currency")).format(
                     args[1].upper()
                 )
             # Check second argument is valid currency code
-            elif len(args[2]) == 3 and args[2].upper() not in self.currencies:
+            elif len(args[2]) == 3 and args[2].upper() not in self.CURRENCIES:
                 self.add_item(title=_("Error - {} not a valid currency")).format(
                     args[2].upper()
                 )
@@ -75,15 +86,13 @@ class Currency(Flox):
                         )
                     )
                 else:
-                    try:
-                        # First strip any commas from the amount
-                        args[0] = args[0].replace(",", "")
-                        # TODO Handle non 200 return code
-                        ratesxml_returncode = plugin.utils.getrates_xml()
-                        ratedict = plugin.utils.populate_rates("eurofxref-daily.xml")
-                        conv = plugin.utils.currconv(
-                            ratedict, args[1], args[2], args[0]
-                        )
+
+                    # First strip any commas from the amount
+                    args[0] = args[0].replace(",", "")
+                    ratesxml_returncode = self.getrates_xml(self.max_age)
+                    if ratesxml_returncode == 200:
+                        ratedict = self.populate_rates("eurofxref-daily.xml")
+                        conv = self.currconv(ratedict, args[1], args[2], args[0])
                         # decimal.getcontext().prec = conv[2]
                         self.add_item(
                             title=(
@@ -96,9 +105,14 @@ class Currency(Flox):
                             ),
                             subtitle=f"Rates date : {conv[0]}",
                         )
-                    # Show exceptions (for debugging as much as anything else)
-                    except Exception as e:
-                        self.add_item("Error - {}").format(repr(e))
+                    else:
+                        self.add_item(
+                            title=_("Couldn't download the rates file"),
+                            subtitle=_(
+                                f"{ratesxml_returncode} - check log for more details"
+                            ),
+                        )
+
         # Always show the usage while there isn't a valid query
         else:
             self.add_item(
@@ -108,7 +122,7 @@ class Currency(Flox):
                 ),
             )
             title = _("Available currencies:")
-            subtitle = ", ".join(self.currencies)
+            subtitle = ", ".join(self.CURRENCIES)
             lines = textwrap.wrap(subtitle, 110)
             if len(lines) > 1:
                 self.add_item(
@@ -122,10 +136,106 @@ class Currency(Flox):
                     (title),
                     (subtitle),
                 )
-            # self.add_item(
-            #    title=_("Currencies available:"),
-            #    subtitle=_(f"{', '.join(self.currencies)}"),
-            # )
+
+    def populate_rates(self, xml):
+        tree = ET.parse(xml)
+        root = tree.getroot()
+        rates = {}
+        for root_Cube in root.findall(
+            "{http://www.ecb.int/vocabulary/2002-08-01/eurofxref}Cube"
+        ):
+            for time_Cube in root_Cube.findall(
+                "{http://www.ecb.int/vocabulary/2002-08-01/eurofxref}Cube"
+            ):
+                rates.update({"date": "{}".format(time_Cube.attrib["time"])})
+                for currency_Cube in time_Cube.findall(
+                    "{http://www.ecb.int/vocabulary/2002-08-01/eurofxref}Cube"
+                ):
+                    rates.update(
+                        {
+                            "{}".format(currency_Cube.attrib["currency"]): "{}".format(
+                                currency_Cube.attrib["rate"]
+                            )
+                        }
+                    )
+        return rates
+
+    def getrates_xml(self, max_age):
+
+        xmlfile = "eurofxref-daily.xml"
+        exists = os.path.isfile(xmlfile)
+        getnewfile = True
+        if exists:
+            current = datetime.datetime.now()
+            t = os.path.getmtime(xmlfile)
+            file = datetime.datetime.fromtimestamp(t)
+            if (current - file) > datetime.timedelta(hours=int(max_age)):
+                getnewfile = True
+            else:
+                getnewfile = False
+        if getnewfile:
+            try:
+                URL = "http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
+                r = requests.get(URL)
+                with open(xmlfile, "wb") as file:
+                    file.write(r.content)
+                self.logger.info(f"Download rates file returned {r.status_code}")
+                return r.status_code
+            except requests.exceptions.HTTPError as e:
+                self.logger.error(f"HTTP Error - {repr(e)}")
+                return _("HTTP Error")
+            except requests.exceptions.ConnectionError as e:
+                self.logger.error(f"Connection Error - {repr(e)}")
+                return _("Connection Error")
+            except requests.exceptions.RequestException as e:
+                self.logger.error(f"Unspecified Download Error - {repr(e)}")
+                return _("Unspecifed Download Error")
+        else:
+            return 200
+
+    def currconv(self, rates, sourcecurr, destcurr, amount):
+        converted = []
+
+        # Change the decimal precision to match the number of digits in the amount
+        if "." in amount:
+            dec_prec = len(amount.split(".")[1])
+        # Default to precision of 3 decimal places
+        else:
+            dec_prec = 3
+
+        # sourcerate = 1
+        destrate = 1
+        if destcurr.upper() == "EUR":
+            for rate in rates:
+                if rate == "date":
+                    converted.append(rates[rate])
+                if rate == sourcecurr.upper():
+                    converted.append(
+                        (1 / decimal.Decimal(rates[rate])) * decimal.Decimal(amount)
+                    )
+                    converted.append(dec_prec)
+                    return converted
+        else:
+            for rate in rates:
+                if rate == "date":
+                    converted.append(rates[rate])
+                if rate == destcurr.upper():
+                    # If source is EURO then straight convert and return
+                    if sourcecurr.upper() == "EUR":
+                        converted.append(
+                            decimal.Decimal(rates[rate]) * decimal.Decimal(amount)
+                        )
+                        converted.append(dec_prec)
+                        return converted
+                    else:
+                        destrate = rates[rate]
+                if rate == sourcecurr.upper():
+                    sourcerate = rates[rate]
+        # Convert via the EURO
+        sourceEuro = (1 / decimal.Decimal(sourcerate)) * decimal.Decimal(amount)
+        converted.append(decimal.Decimal(sourceEuro) * decimal.Decimal(destrate))
+        converted.append(dec_prec)
+        return converted
 
 
 if __name__ == "__main__":
