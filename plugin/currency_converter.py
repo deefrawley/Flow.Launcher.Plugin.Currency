@@ -76,42 +76,41 @@ class Currency(Flox):
                 self.add_item(title=_("Error - {} not a valid currency")).format(
                     args[2].upper()
                 )
+
+            # If source and dest currencies the same just return entered amount
+            elif args[1].upper() == args[2].upper():
+                self.add_item(
+                    title="{} {} = {} {}".format(
+                        args[0], args[1].upper(), args[0], args[2].upper()
+                    )
+                )
             # Do the conversion
             else:
-                # If source and dest currencies the same just return entered amount
-                if args[1].upper() == args[2].upper():
+                # First strip any commas from the amount
+                args[0] = args[0].replace(",", "")
+                ratesxml_returncode = self.getrates_xml(self.max_age)
+                if ratesxml_returncode == 200:
+                    ratedict = self.populate_rates("eurofxref-daily.xml")
+                    conv = self.currconv(ratedict, args[1], args[2], args[0])
+                    # decimal.getcontext().prec = conv[2]
                     self.add_item(
-                        title="{} {} = {} {}".format(
-                            args[0], args[1].upper(), args[0], args[2].upper()
-                        )
+                        title=(
+                            f"{locale.format_string('%.3f', float(args[0]), grouping=True)} {args[1].upper()} = "
+                            f"{locale.format_string('%.3f', round(decimal.Decimal(conv[1]), conv[2]), grouping=True)} "
+                            f"{args[2].upper()} "
+                            f"(1 {args[1].upper()} = "
+                            f"{round(decimal.Decimal(conv[1]) / decimal.Decimal(args[0]),conv[2],)} "
+                            f"{args[2].upper()})"
+                        ),
+                        subtitle=_("Rates date : {}").format(conv[0]),
                     )
                 else:
-
-                    # First strip any commas from the amount
-                    args[0] = args[0].replace(",", "")
-                    ratesxml_returncode = self.getrates_xml(self.max_age)
-                    if ratesxml_returncode == 200:
-                        ratedict = self.populate_rates("eurofxref-daily.xml")
-                        conv = self.currconv(ratedict, args[1], args[2], args[0])
-                        # decimal.getcontext().prec = conv[2]
-                        self.add_item(
-                            title=(
-                                f"{locale.format_string('%.3f', float(args[0]), grouping=True)} {args[1].upper()} = "
-                                f"{locale.format_string('%.3f', round(decimal.Decimal(conv[1]), conv[2]), grouping=True)} "
-                                f"{args[2].upper()} "
-                                f"(1 {args[1].upper()} = "
-                                f"{round(decimal.Decimal(conv[1]) / decimal.Decimal(args[0]),conv[2],)} "
-                                f"{args[2].upper()})"
-                            ),
-                            subtitle=f"Rates date : {conv[0]}",
-                        )
-                    else:
-                        self.add_item(
-                            title=_("Couldn't download the rates file"),
-                            subtitle=_(
-                                f"{ratesxml_returncode} - check log for more details"
-                            ),
-                        )
+                    self.add_item(
+                        title=_("Couldn't download the rates file"),
+                        subtitle=_("{} - check log for more details").format(
+                            ratesxml_returncode
+                        ),
+                    )
 
         # Always show the usage while there isn't a valid query
         else:
@@ -130,7 +129,7 @@ class Currency(Flox):
                     subtitle=(lines[0]),
                 )
                 for line in range(1, len(lines)):
-                    self.add_item(title="", subtitle=(lines[line]), icon="garbage")
+                    self.add_item(title="", subtitle=(lines[line]))
             else:
                 self.add_item(
                     (title),

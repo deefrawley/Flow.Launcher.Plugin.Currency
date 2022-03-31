@@ -1,13 +1,13 @@
 # Chinese translations for Flow.plugin.currency.
 # Copyright (C) 2020 CitizenDee (author)
 # This file is distributed under the same license as the  project.
-# CitizenDee <deefrawley@gmail.com>, 2020.
+# CitizenDee <deefrawley@gmail.com>, 2022.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version:  2.0.0\n"
 "Report-Msgid-Bugs-To: deefrawley@gmail.com\n"
-"POT-Creation-Date: 2020-12-24 19:52+1100\n"
+"POT-Creation-Date: 2022-03-29 22:11+1100\n"
 "PO-Revision-Date: 2020-12-13 20:56+1100\n"
 "Last-Translator: CitizenDee <deefrawley@gmail.com>\n"
 "Language: zh\n"
@@ -16,29 +16,54 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.9.0\n"
+"Generated-By: Babel 2.9.1\n"
 
-#: plugin/ui.py:80
+#: plugin/currency_converter.py:67
 msgid "Please enter three character currency codes"
 msgstr "输入三个字符的货币代码"
 
-#: plugin/ui.py:86 plugin/ui.py:91
+#: plugin/currency_converter.py:71 plugin/currency_converter.py:76
 msgid "Error - {} not a valid currency"
 msgstr "错误 - {} 不是有效货币"
 
-#: plugin/ui.py:121
+#: plugin/currency_converter.py:106
 msgid "Rates date : {}"
 msgstr "汇率日期 : {}"
 
-#: plugin/ui.py:125
-msgid "Error - {}"
-msgstr "错误 - {}"
+#: plugin/currency_converter.py:110
+msgid "Couldn't download the rates file"
+msgstr "无法下载汇率文件"
 
-#: plugin/ui.py:129
-msgid "Currency Converter"
-msgstr "货币兑换"
+#: plugin/currency_converter.py:111
+msgid "{} - check log for more details"
+msgstr "{} - 查看日志以获取更多详细信息"
 
-#: plugin/ui.py:130
-msgid "<Hotkey> <Amount> <Source currency> <Destination currency>"
+#: plugin/currency_converter.py:119
+#, fuzzy
+msgid "<Amount> <Source currency code> <Destination currency code>"
 msgstr "<热键> <量> <来源货币> <目标货币>"
+
+#: plugin/currency_converter.py:120
+msgid ""
+"There will be a short delay if the currency rates file needs to be "
+"downloaded"
+msgstr ""
+"如果需要下载汇率文件，会有短暂的延迟"
+
+#: plugin/currency_converter.py:124
+msgid "Available currencies:"
+msgstr 可用货币"
+
+#: plugin/currency_converter.py:186
+msgid "HTTP Error"
+msgstr "HTTP 错误"
+
+#: plugin/currency_converter.py:189
+msgid "Connection Error"
+msgstr "连接错误"
+
+#: plugin/currency_converter.py:192
+msgid "Unspecifed Download Error"
+msgstr "未指定的下载错误"
+
 
