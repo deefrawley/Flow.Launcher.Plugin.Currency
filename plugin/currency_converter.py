@@ -61,80 +61,96 @@ class Currency(Flox):
     def query(self, query):
         q = query.strip()
         args = q.split(" ")
-        if len(args) == 3:
-            # Check codes are three letters
-            if len(args[1]) != 3 or len(args[2]) != 3:
-                self.add_item(title=_("Please enter three character currency codes"))
-
-            # Check first argument is valid currency code
-            elif len(args[1]) == 3 and args[1].upper() not in self.CURRENCIES:
-                self.add_item(title=_("Error - {} not a valid currency")).format(
-                    args[1].upper()
-                )
-            # Check second argument is valid currency code
-            elif len(args[2]) == 3 and args[2].upper() not in self.CURRENCIES:
-                self.add_item(title=_("Error - {} not a valid currency")).format(
-                    args[2].upper()
-                )
-
-            # If source and dest currencies the same just return entered amount
-            elif args[1].upper() == args[2].upper():
-                self.add_item(
-                    title="{} {} = {} {}".format(
-                        args[0], args[1].upper(), args[0], args[2].upper()
-                    )
-                )
-            # Do the conversion
-            else:
-                # First strip any commas from the amount
-                args[0] = args[0].replace(",", "")
-                ratesxml_returncode = self.getrates_xml(self.max_age)
-                if ratesxml_returncode == 200:
-                    ratedict = self.populate_rates("eurofxref-daily.xml")
-                    conv = self.currconv(ratedict, args[1], args[2], args[0])
-                    # decimal.getcontext().prec = conv[2]
-                    self.add_item(
-                        title=(
-                            f"{locale.format_string('%.3f', float(args[0]), grouping=True)} {args[1].upper()} = "
-                            f"{locale.format_string('%.3f', round(decimal.Decimal(conv[1]), conv[2]), grouping=True)} "
-                            f"{args[2].upper()} "
-                            f"(1 {args[1].upper()} = "
-                            f"{round(decimal.Decimal(conv[1]) / decimal.Decimal(args[0]),conv[2],)} "
-                            f"{args[2].upper()})"
-                        ),
-                        subtitle=_("Rates date : {}").format(conv[0]),
-                    )
-                else:
-                    self.add_item(
-                        title=_("Couldn't download the rates file"),
-                        subtitle=_("{} - check log for more details").format(
-                            ratesxml_returncode
-                        ),
-                    )
-
-        # Always show the usage while there isn't a valid query
-        else:
+        if len(args) == 1:
             self.add_item(
                 title=_("<Amount> <Source currency code> <Destination currency code>"),
                 subtitle=_(
                     "There will be a short delay if the currency rates file needs to be downloaded"
                 ),
             )
-            title = _("Available currencies:")
-            subtitle = ", ".join(self.CURRENCIES)
-            lines = textwrap.wrap(subtitle, 110)
-            if len(lines) > 1:
+
+        elif len(args) == 2:
+            hint = self.applicablerates(args[1])
+            self.add_item(
+                title=(f", ".join([f"{x}" for x in hint])),
+                subtitle=_("Source currency"),
+            )
+        elif len(args) == 3:
+            if len(args[2]) <= 2:
+                hint = self.applicablerates(args[2])
                 self.add_item(
-                    title=(title),
-                    subtitle=(lines[0]),
+                    title=(f", ".join([f"{x}" for x in hint])),
+                    subtitle=_("Destination currency"),
                 )
-                for line in range(1, len(lines)):
-                    self.add_item(title="", subtitle=(lines[line]))
             else:
-                self.add_item(
-                    (title),
-                    (subtitle),
-                )
+                # Check codes are three letters
+                if len(args[1]) != 3 or len(args[2]) != 3:
+                    self.add_item(
+                        title=_("Please enter three character currency codes")
+                    )
+
+                # Check first argument is valid currency code
+                elif len(args[1]) == 3 and args[1].upper() not in self.CURRENCIES:
+                    self.add_item(title=_("Error - source is not a valid currency"))
+
+                # Check second argument is valid currency code
+                elif len(args[2]) == 3 and args[2].upper() not in self.CURRENCIES:
+                    self.add_item(
+                        title=_("Error - destination is not a valid currency")
+                    )
+                elif not args[0].isdigit():
+                    self.add_item(title=_("Error - amount must be numeric"))
+
+                # If source and dest currencies the same just return entered amount
+                elif args[1].upper() == args[2].upper():
+                    self.add_item(
+                        title="{} {} = {} {}".format(
+                            args[0], args[1].upper(), args[0], args[2].upper()
+                        )
+                    )
+                # Do the conversion
+                else:
+                    # First strip any commas from the amount
+                    args[0] = args[0].replace(",", "")
+                    # Get the rates
+                    ratesxml_returncode = self.getrates_xml(self.max_age)
+                    if ratesxml_returncode == 200:
+                        ratedict = self.populate_rates("eurofxref-daily.xml")
+                        conv = self.currconv(ratedict, args[1], args[2], args[0])
+                        # Set up some decimal precisions to use in the result
+                        # amount and converted amount use precision as entered. Conversation rate uses min 3 places
+                        if "." in args[0]:
+                            dec_prec = len(args[0].split(".")[1])
+                            if dec_prec < 3:
+                                dec_prec2 = 3
+                            else:
+                                dec_prec2 = dec_prec
+                        else:
+                            dec_prec = 0
+                            dec_prec2 = 3
+                        fmt_str = "%.{0:d}f".format(dec_prec)
+
+                        self.add_item(
+                            title=(
+                                f"{locale.format_string(fmt_str, float(args[0]), grouping=True)} {args[1].upper()} = "
+                                f"{locale.format_string(fmt_str, round(decimal.Decimal(conv[1]), dec_prec), grouping=True)} "
+                                f"{args[2].upper()} "
+                                f"(1 {args[1].upper()} = "
+                                f"{round(decimal.Decimal(conv[1]) / decimal.Decimal(args[0]),dec_prec2,)} "
+                                f"{args[2].upper()})"
+                            ),
+                            subtitle=_("Rates date : {}").format(conv[0]),
+                        )
+                    else:
+                        self.add_item(
+                            title=_("Couldn't download the rates file"),
+                            subtitle=_("{} - check log for more details").format(
+                                ratesxml_returncode
+                            ),
+                        )
+
+        else:
+            pass
 
     def populate_rates(self, xml):
         tree = ET.parse(xml)
@@ -195,13 +211,6 @@ class Currency(Flox):
     def currconv(self, rates, sourcecurr, destcurr, amount):
         converted = []
 
-        # Change the decimal precision to match the number of digits in the amount
-        if "." in amount:
-            dec_prec = len(amount.split(".")[1])
-        # Default to precision of 3 decimal places
-        else:
-            dec_prec = 3
-
         # sourcerate = 1
         destrate = 1
         if destcurr.upper() == "EUR":
@@ -212,7 +221,6 @@ class Currency(Flox):
                     converted.append(
                         (1 / decimal.Decimal(rates[rate])) * decimal.Decimal(amount)
                     )
-                    converted.append(dec_prec)
                     return converted
         else:
             for rate in rates:
@@ -224,7 +232,6 @@ class Currency(Flox):
                         converted.append(
                             decimal.Decimal(rates[rate]) * decimal.Decimal(amount)
                         )
-                        converted.append(dec_prec)
                         return converted
                     else:
                         destrate = rates[rate]
@@ -233,8 +240,13 @@ class Currency(Flox):
         # Convert via the EURO
         sourceEuro = (1 / decimal.Decimal(sourcerate)) * decimal.Decimal(amount)
         converted.append(decimal.Decimal(sourceEuro) * decimal.Decimal(destrate))
-        converted.append(dec_prec)
         return converted
+
+    def applicablerates(self, ratestr):
+        choices = [i for i in self.CURRENCIES if i.upper().startswith(ratestr.upper())]
+        if not choices:
+            choices.append(_("No matches found"))
+        return choices
 
 
 if __name__ == "__main__":

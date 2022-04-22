@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  2.0.0\n"
 "Report-Msgid-Bugs-To: deefrawley@gmail.com\n"
-"POT-Creation-Date: 2022-03-29 22:11+1100\n"
+"POT-Creation-Date: 2022-04-22 17:42+1000\n"
 "PO-Revision-Date: 2020-12-13 20:56+1100\n"
 "Last-Translator: CitizenDee <deefrawley@gmail.com>\n"
 "Language: zh\n"
@@ -18,52 +18,67 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: plugin/currency_converter.py:67
-msgid "Please enter three character currency codes"
-msgstr "输入三个字符的货币代码"
-
-#: plugin/currency_converter.py:71 plugin/currency_converter.py:76
-msgid "Error - {} not a valid currency"
-msgstr "错误 - {} 不是有效货币"
-
-#: plugin/currency_converter.py:106
-msgid "Rates date : {}"
-msgstr "汇率日期 : {}"
-
-#: plugin/currency_converter.py:110
-msgid "Couldn't download the rates file"
-msgstr "无法下载汇率文件"
-
-#: plugin/currency_converter.py:111
-msgid "{} - check log for more details"
-msgstr "{} - 查看日志以获取更多详细信息"
-
-#: plugin/currency_converter.py:119
+#: plugin/currency_converter.py:66
 #, fuzzy
 msgid "<Amount> <Source currency code> <Destination currency code>"
 msgstr "<热键> <量> <来源货币> <目标货币>"
 
-#: plugin/currency_converter.py:120
+#: plugin/currency_converter.py:67
 msgid ""
 "There will be a short delay if the currency rates file needs to be "
 "downloaded"
-msgstr ""
-"如果需要下载汇率文件，会有短暂的延迟"
+msgstr "如果需要下载汇率文件，会有短暂的延迟"
 
-#: plugin/currency_converter.py:124
-msgid "Available currencies:"
-msgstr 可用货币"
+#: plugin/currency_converter.py:76
+msgid "Source currency"
+msgstr "来源货币"
 
-#: plugin/currency_converter.py:186
+#: plugin/currency_converter.py:83
+msgid "Destination currency"
+msgstr "目的地货币"
+
+#: plugin/currency_converter.py:89
+msgid "Please enter three character currency codes"
+msgstr "输入三个字符的货币代码"
+
+#: plugin/currency_converter.py:94
+#, fuzzy
+msgid "Error - source is not a valid currency"
+msgstr "错误 - 来源货币不是有效货币"
+
+#: plugin/currency_converter.py:99
+#, fuzzy
+msgid "Error - destination is not a valid currency"
+msgstr "错误 - 目的地货币不是有效货币"
+
+#: plugin/currency_converter.py:102
+msgid "Error - amount must be numeric"
+msgstr "错误 - 金额必须是数字"
+
+#: plugin/currency_converter.py:142
+msgid "Rates date : {}"
+msgstr "汇率日期 : {}"
+
+#: plugin/currency_converter.py:146
+msgid "Couldn't download the rates file"
+msgstr "无法下载汇率文件"
+
+#: plugin/currency_converter.py:147
+msgid "{} - check log for more details"
+msgstr "{} - 查看日志以获取更多详细信息"
+
+#: plugin/currency_converter.py:201
 msgid "HTTP Error"
 msgstr "HTTP 错误"
 
-#: plugin/currency_converter.py:189
+#: plugin/currency_converter.py:204
 msgid "Connection Error"
 msgstr "连接错误"
 
-#: plugin/currency_converter.py:192
+#: plugin/currency_converter.py:207
 msgid "Unspecifed Download Error"
 msgstr "未指定的下载错误"
 
-
+#: plugin/currency_converter.py:248
+msgid "No matches found"
+msgstr "未找到匹配项"
