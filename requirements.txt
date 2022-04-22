@@ -1,5 +1,5 @@
 flowlauncher
-flox
+flox-lib
 python-dotenv
 requests
 typing
