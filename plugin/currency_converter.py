@@ -1,7 +1,3 @@
-# -*- coding: utf-8 -*-
-import textwrap
-
-# import plugin.utils
 import decimal
 import locale
 import requests
