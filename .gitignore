@@ -5,6 +5,7 @@
 # Module specific
 eurofxref-daily.xml
 Flow.Launcher.Plugin.Currency*.zip
+translation_helper.py
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
