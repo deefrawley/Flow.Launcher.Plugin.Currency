@@ -1,2 +1,7 @@
-click
+flowlauncher
+flox
+python-dotenv
+requests
+typing
 babel
+click
