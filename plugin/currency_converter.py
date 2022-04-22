@@ -16,6 +16,7 @@ from flox import Flox
 
 class Currency(Flox):
     locale.setlocale(locale.LC_ALL, "")
+    ratesURL = "http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
     # TODO - save list to settings and update from each XML download and just use this list as a first time default
     CURRENCIES = [
         "AUD",
@@ -122,30 +123,34 @@ class Currency(Flox):
                     if ratesxml_returncode == 200:
                         ratedict = self.populate_rates("eurofxref-daily.xml")
                         conv = self.currconv(ratedict, args[1], args[2], args[0])
-                        # Set up some decimal precisions to use in the result
-                        # amount and converted amount use precision as entered. Conversation rate uses min 3 places
-                        if "." in args[0]:
-                            dec_prec = len(args[0].split(".")[1])
-                            if dec_prec < 3:
-                                dec_prec2 = 3
-                            else:
-                                dec_prec2 = dec_prec
+                        if len(conv) == 1:
+                            # Something has gone wrong
+                            self.add_item(title="{}".format(conv[0]))
                         else:
-                            dec_prec = 0
-                            dec_prec2 = 3
-                        fmt_str = "%.{0:d}f".format(dec_prec)
+                            # Set up some decimal precisions to use in the result
+                            # amount and converted amount use precision as entered. Conversation rate uses min 3 places
+                            if "." in args[0]:
+                                dec_prec = len(args[0].split(".")[1])
+                                if dec_prec < 3:
+                                    dec_prec2 = 3
+                                else:
+                                    dec_prec2 = dec_prec
+                            else:
+                                dec_prec = 0
+                                dec_prec2 = 3
+                            fmt_str = "%.{0:d}f".format(dec_prec)
 
-                        self.add_item(
-                            title=(
-                                f"{locale.format_string(fmt_str, float(args[0]), grouping=True)} {args[1].upper()} = "
-                                f"{locale.format_string(fmt_str, round(decimal.Decimal(conv[1]), dec_prec), grouping=True)} "
-                                f"{args[2].upper()} "
-                                f"(1 {args[1].upper()} = "
-                                f"{round(decimal.Decimal(conv[1]) / decimal.Decimal(args[0]),dec_prec2,)} "
-                                f"{args[2].upper()})"
-                            ),
-                            subtitle=_("Rates date : {}").format(conv[0]),
-                        )
+                            self.add_item(
+                                title=(
+                                    f"{locale.format_string(fmt_str, float(args[0]), grouping=True)} {args[1].upper()} = "
+                                    f"{locale.format_string(fmt_str, round(decimal.Decimal(conv[1]), dec_prec), grouping=True)} "
+                                    f"{args[2].upper()} "
+                                    f"(1 {args[1].upper()} = "
+                                    f"{round(decimal.Decimal(conv[1]) / decimal.Decimal(args[0]),dec_prec2,)} "
+                                    f"{args[2].upper()})"
+                                ),
+                                subtitle=_("Rates date : {}").format(conv[0]),
+                            )
                     else:
                         self.add_item(
                             title=_("Couldn't download the rates file"),
@@ -195,8 +200,7 @@ class Currency(Flox):
                 getnewfile = False
         if getnewfile:
             try:
-                URL = "http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
-                r = requests.get(URL)
+                r = requests.get(self.ratesURL)
                 with open(xmlfile, "wb") as file:
                     file.write(r.content)
                 self.logger.info(f"Download rates file returned {r.status_code}")
@@ -215,6 +219,15 @@ class Currency(Flox):
 
     def currconv(self, rates, sourcecurr, destcurr, amount):
         converted = []
+        # Check source currency is in the rates dict -catch odd errors like the bank suspending some rates
+        if not sourcecurr.upper() in rates or not destcurr.upper() in rates:
+            self.logger.error(
+                f"Source or destination currency not in rates dict - {sourcecurr} or {destcurr}"
+            )
+            converted.append(
+                _("Error - expected source or destination currency not in rates file")
+            )
+            return converted
 
         # sourcerate = 1
         destrate = 1
