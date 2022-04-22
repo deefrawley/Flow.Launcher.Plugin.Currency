@@ -50,6 +50,7 @@ class Currency(Flox):
         "TRY",
         "USD",
         "ZAR",
+        "XXX",
         "EUR",
     ]
 

@@ -10,37 +10,28 @@ Uses the [European Central Bank](https://www.ecb.europa.eu/stats/policy_and_exch
 
 Currency code that can be used are:
 
-'AUD' , 'BGN' , 'BRL' , 'CAD' , 'CHF' , 'CNY' , 'CZK' , 'DKK' , 'GBP', 'HKD' , 'HRK' , 'HUF' , 'IDR' , 'ILS' , 'INR' , 'ISK' , 'JPY' , 'KRW', 'MXN','MYR' , 'NOK' , 'NZD' , 'PHP' , 'PLN' , 'RON' , 'RUB' , 'SEK', 'SGD' , 'THB' , 'TRY' , 'USD' , 'ZAR' , 'EUR'
+'AUD' , 'BGN' , 'BRL' , 'CAD' , 'CHF' , 'CNY' , 'CZK' , 'DKK' , 'GBP', 'HKD' , 'HRK' , 'HUF' , 'IDR' , 'ILS' , 'INR' , 'ISK' , 'JPY' , 'KRW', 'MXN', 'MYR' , 'NOK' , 'NZD' , 'PHP' , 'PLN' , 'RON' , 'RUB' , 'SEK', 'SGD' , 'THB' , 'TRY' , 'USD' , 'ZAR' , 'EUR'
 
 ### Requirements
 
-Python 3.5 or later installed on your system, with python.exe in your PATH variable and this path updated in the Flow Launcher settings (this is a general requirement to use Python plugins with Flow). As of v1.8, Flow Launcher should take care of the installation of Python for you if it is not on your system.
+Flow Launcher should take care of the installation of Python for you if it is not on your system, as well as the libraries needed by this plugin.
 
-You must be online when you run the plugin in Flow to download the currency XML file, or you will get a connection error. If the local XML file is 2 hours or less old (that is, you've run the plugin before in the previous two hours), it will just use the local file.
+You must be online when you run the plugin in Flow to download the currency XML file, or you will get a connection error. A local copy of the local XML file froma previous download can be used if it exists.
+
+### Plugin Settings
+
+Type `settings` in Flow to access the settings window, then go to Plugins - Currency Converter
+
+__Keyword (default 'cc')__ - change this to set a new keyword to activate the plugin
+
+__File age (default 6)__ - the age in hours for the local copy of the rates file to be used before the plugin downloads a fresh copy
+
 
 ### Installing
 
 #### Package Manager
 
 Use the `pm install` command from within Flow itself.
-
-#### Manual
-
-Add the Flow.Launcher.Plugin.Currency directory to %APPDATA%\Roaming\FlowLauncher\Plugins\ and restart Flow.
-
-#### Python Package Requirements
-
-There is no requirement to install the packages as they will be packed with the release. 
-
-If you still want to manually pip install them:
-
-The `requirements.txt` file in this repo outlines which packages are needed. This can be found online here on Github, as well as in the local plugin directory once installed (%APPDATA%\Roaming\FlowLauncher\Plugins\Currency Converter-X.X.X\ where X.X.X is the currently installed version)
-
-The easiest way to manually install these packages is to use the following command in a Windows Command Prompt or Powershell Prompt
-
-`pip install -r requirements.txt -t ./lib`
-
-Remember you need to be in the local directory containing the requirements text file.
 
 ### Localisation
 
@@ -51,6 +42,10 @@ Currently English and Chinese language supported. Edit the .env file to change t
 | Keyword                                                          | Description                                 |
 | ---------------------------------------------------------------- | ------------------------------------------- |
 | `cc {amount} {source currency code} {destination currency code}` | Convert amount from source to dest currency |
+
+When typing the source or destination currency the plugin will show what currencies are available.
+
+Decimal precision is based on the input amount however the base rate is always a minimum of three decimal places.
 
 ### Problems, errors and feature requests
 
