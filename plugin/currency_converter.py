@@ -98,7 +98,11 @@ class Currency(Flox):
                     self.add_item(
                         title=_("Error - destination is not a valid currency")
                     )
-                elif not args[0].isdigit():
+
+                # Check amount is an int or a float
+                elif (
+                    not args[0].isdigit() and not args[0].replace(".", "", 1).isdigit()
+                ):
                     self.add_item(title=_("Error - amount must be numeric"))
 
                 # If source and dest currencies the same just return entered amount
