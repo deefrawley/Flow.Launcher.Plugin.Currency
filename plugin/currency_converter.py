@@ -216,7 +216,9 @@ class Currency(Flox):
     def currconv(self, rates, sourcecurr, destcurr, amount):
         converted = []
         # Check source currency is in the rates dict -catch odd errors like the bank suspending some rates
-        if not sourcecurr.upper() in rates or not destcurr.upper() in rates:
+        if (not sourcecurr.upper() in rates and sourcecurr.upper() != "EUR") or (
+            not destcurr.upper() in rates and destcurr.upper() != "EUR"
+        ):
             self.logger.error(
                 f"Source or destination currency not in rates dict - {sourcecurr} or {destcurr}"
             )
