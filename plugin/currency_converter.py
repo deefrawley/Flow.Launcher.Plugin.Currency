@@ -124,7 +124,7 @@ class Currency(Flox):
                             self.add_item(title="{}".format(conv[0]))
                         else:
                             # Set up some decimal precisions to use in the result
-                            # amount and converted amount use precision as entered. Conversation rate uses min 3 places
+                            # amount and converted amount use precision as entered. Conversion rate uses min 3 places
                             if "." in args[0]:
                                 dec_prec = len(args[0].split(".")[1])
                                 if dec_prec < 3:
@@ -132,7 +132,7 @@ class Currency(Flox):
                                 else:
                                     dec_prec2 = dec_prec
                             else:
-                                dec_prec = 0
+                                dec_prec = 1
                                 dec_prec2 = 3
                             fmt_str = "%.{0:d}f".format(dec_prec)
 
