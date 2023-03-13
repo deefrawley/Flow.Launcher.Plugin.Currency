@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version:  2.0.0\n"
+"Project-Id-Version:  2.0.6\n"
 "Report-Msgid-Bugs-To: deefrawley@gmail.com\n"
-"POT-Creation-Date: 2022-04-22 18:59+1000\n"
+"POT-Creation-Date: 2023-03-13 11:31+1100\n"
 "PO-Revision-Date: 2020-12-13 20:26+1100\n"
 "Last-Translator: CitizenDee <deefrawley@gmail.com>\n"
 "Language: en\n"
@@ -18,11 +18,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: plugin/currency_converter.py:68
+#: plugin/currency_converter.py:64
 msgid "<Amount> <Source currency code> <Destination currency code>"
 msgstr "<Amount> <Source currency code> <Destination currency code>"
 
-#: plugin/currency_converter.py:69
+#: plugin/currency_converter.py:65
 msgid ""
 "There will be a short delay if the currency rates file needs to be "
 "downloaded"
@@ -30,61 +30,65 @@ msgstr ""
 "There will be a short delay if the currency rates file needs to be "
 "downloaded"
 
-#: plugin/currency_converter.py:78
+#: plugin/currency_converter.py:74
 msgid "Source currency"
 msgstr "Source currency"
 
-#: plugin/currency_converter.py:85
+#: plugin/currency_converter.py:81
 msgid "Destination currency"
 msgstr "Destination currency"
 
-#: plugin/currency_converter.py:91
+#: plugin/currency_converter.py:87
 msgid "Please enter three character currency codes"
 msgstr "Please enter three character currency codes"
 
-#: plugin/currency_converter.py:96
+#: plugin/currency_converter.py:92
 #, fuzzy
 msgid "Error - source is not a valid currency"
 msgstr "Error - source is not a valid currency"
 
-#: plugin/currency_converter.py:101
+#: plugin/currency_converter.py:97
 #, fuzzy
 msgid "Error - destination is not a valid currency"
 msgstr "Error - destination not a valid currency"
 
-#: plugin/currency_converter.py:108
+#: plugin/currency_converter.py:104
 msgid "Error - amount must be numeric"
 msgstr "Error - amount must be numeric"
 
-#: plugin/currency_converter.py:152
+#: plugin/currency_converter.py:148
 msgid "Rates date : {}"
 msgstr "Rates date : {}"
 
-#: plugin/currency_converter.py:156
+#: plugin/currency_converter.py:152
 msgid "Couldn't download the rates file"
 msgstr "Couldn't download the rates file"
 
-#: plugin/currency_converter.py:157
+#: plugin/currency_converter.py:153
 msgid "{} - check log for more details"
 msgstr "{} - check log for more details"
 
-#: plugin/currency_converter.py:210
+#: plugin/currency_converter.py:205
 msgid "HTTP Error"
 msgstr "HTTP Error"
 
-#: plugin/currency_converter.py:213
+#: plugin/currency_converter.py:208
 msgid "Connection Error"
 msgstr "Connection Error"
 
-#: plugin/currency_converter.py:216
+#: plugin/currency_converter.py:211
 msgid "Unspecifed Download Error"
 msgstr "Unspecifed Download Error"
 
-#: plugin/currency_converter.py:228
+#: plugin/currency_converter.py:226
 msgid "Error - expected source or destination currency not in rates file"
 msgstr "Error - expected source or destination currency not in rates file"
 
-#: plugin/currency_converter.py:266
+#: plugin/currency_converter.py:231
+msgid "Warning - amount entered must be greater than zero"
+msgstr "Warning - amount entered must be greater than zero"
+
+#: plugin/currency_converter.py:268
 msgid "No matches found"
 msgstr "No matches found"
 

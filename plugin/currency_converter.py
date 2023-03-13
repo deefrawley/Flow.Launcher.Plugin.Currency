@@ -182,7 +182,6 @@ class Currency(Flox):
         return rates
 
     def getrates_xml(self, max_age):
-
         xmlfile = "eurofxref-daily.xml"
         exists = os.path.isfile(xmlfile)
         getnewfile = True
@@ -214,6 +213,7 @@ class Currency(Flox):
             return 200
 
     def currconv(self, rates, sourcecurr, destcurr, amount):
+        # converted list - if error return error message, if not error return date and converted amount
         converted = []
         # Check source currency is in the rates dict -catch odd errors like the bank suspending some rates
         if (not sourcecurr.upper() in rates and sourcecurr.upper() != "EUR") or (
@@ -226,6 +226,10 @@ class Currency(Flox):
                 _("Error - expected source or destination currency not in rates file")
             )
             return converted
+        # Check for zero amount, warn and don't convert
+        if decimal.Decimal(amount) == 0:
+            converted.append(_("Warning - amount entered must be greater than zero"))
+            return converted 
 
         # sourcerate = 1
         destrate = 1
