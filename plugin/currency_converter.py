@@ -1,7 +1,6 @@
 import decimal
 import locale
 import requests
-import decimal
 import xml.etree.ElementTree as ET
 import os
 import datetime
@@ -12,7 +11,7 @@ from flox import Flox
 
 class Currency(Flox):
     locale.setlocale(locale.LC_ALL, "")
-    ratesURL = "http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
+    ratesURL = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
     # TODO - save list to settings and update from each XML download and just use this list as a first time default
     CURRENCIES = [
         "AUD",
@@ -70,14 +69,14 @@ class Currency(Flox):
         elif len(args) == 2:
             hint = self.applicablerates(args[1])
             self.add_item(
-                title=(f", ".join([f"{x}" for x in hint])),
+                title=", ".join(hint),
                 subtitle=_("Source currency"),
             )
         elif len(args) == 3:
             if len(args[2]) <= 2:
                 hint = self.applicablerates(args[2])
                 self.add_item(
-                    title=(f", ".join([f"{x}" for x in hint])),
+                    title=", ".join(hint),
                     subtitle=_("Destination currency"),
                 )
             else:
@@ -155,9 +154,6 @@ class Currency(Flox):
                             ),
                         )
 
-        else:
-            pass
-
     def populate_rates(self, xml):
         tree = ET.parse(xml)
         root = tree.getroot()
@@ -168,15 +164,13 @@ class Currency(Flox):
             for time_Cube in root_Cube.findall(
                 "{http://www.ecb.int/vocabulary/2002-08-01/eurofxref}Cube"
             ):
-                rates.update({"date": "{}".format(time_Cube.attrib["time"])})
+                rates.update({"date": time_Cube.attrib["time"]})
                 for currency_Cube in time_Cube.findall(
                     "{http://www.ecb.int/vocabulary/2002-08-01/eurofxref}Cube"
                 ):
                     rates.update(
                         {
-                            "{}".format(currency_Cube.attrib["currency"]): "{}".format(
-                                currency_Cube.attrib["rate"]
-                            )
+                            currency_Cube.attrib["currency"]: currency_Cube.attrib["rate"]
                         }
                     )
         return rates
@@ -195,7 +189,8 @@ class Currency(Flox):
                 getnewfile = False
         if getnewfile:
             try:
-                r = requests.get(self.ratesURL)
+                r = requests.get(self.ratesURL, timeout=10)
+                r.raise_for_status()
                 with open(xmlfile, "wb") as file:
                     file.write(r.content)
                 self.logger.info(f"Download rates file returned {r.status_code}")
@@ -231,7 +226,7 @@ class Currency(Flox):
             converted.append(_("Warning - amount entered must be greater than zero"))
             return converted 
 
-        # sourcerate = 1
+        sourcerate = 1
         destrate = 1
         if destcurr.upper() == "EUR":
             for rate in rates:
