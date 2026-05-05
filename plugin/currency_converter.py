@@ -12,7 +12,8 @@ from flox import Flox
 class Currency(Flox):
     locale.setlocale(locale.LC_ALL, "")
     ratesURL = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
-    # TODO - save list to settings and update from each XML download and just use this list as a first time default
+    # Default currency list used as a fallback when no cached rates file exists yet.
+    # On subsequent runs __init__ replaces this with the live list parsed from the XML.
     CURRENCIES = [
         "AUD",
         "BGN",
@@ -54,6 +55,13 @@ class Currency(Flox):
         super().__init__(*args, **kwargs)
         self.max_age = self.settings.get("max_age")
         self.logger_level("info")
+        xmlfile = "eurofxref-daily.xml"
+        if os.path.isfile(xmlfile):
+            try:
+                ratedict = self.populate_rates(xmlfile)
+                self.CURRENCIES = [k for k in ratedict if k != "date"] + ["EUR"]
+            except Exception as e:
+                self.logger.warning(f"Could not parse rates file for currency list, using defaults - {repr(e)}")
 
     def query(self, query):
         q = query.strip()
