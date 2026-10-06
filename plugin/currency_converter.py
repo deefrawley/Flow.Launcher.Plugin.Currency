@@ -202,13 +202,22 @@ class Currency(Flox):
                 return r.status_code
             except requests.exceptions.HTTPError as e:
                 self.logger.error(f"HTTP Error - {repr(e)}")
-                return _("HTTP Error")
+                errmsg = _("HTTP Error")
             except requests.exceptions.ConnectionError as e:
                 self.logger.error(f"Connection Error - {repr(e)}")
-                return _("Connection Error")
+                errmsg = _("Connection Error")
             except requests.exceptions.RequestException as e:
                 self.logger.error(f"Unspecified Download Error - {repr(e)}")
-                return _("Unspecifed Download Error")
+                errmsg = _("Unspecifed Download Error")
+            # A failed download should not stop the plugin from converting.
+            # Fall back to the rates file downloaded on a previous run, if any,
+            # and let the result subtitle show the date those rates are from.
+            if exists:
+                self.logger.warning(
+                    f"{errmsg} - using the cached rates file instead"
+                )
+                return 200
+            return errmsg
         else:
             return 200
 
